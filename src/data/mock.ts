@@ -7,7 +7,7 @@ export type Customer = {
   mobile: string;
   email: string;
   city: string;
-  gstin?: string;
+  gstin?: string | undefined;
   invoices: number;
   totalPurchase: number;
   lastPurchase: string;
@@ -107,7 +107,7 @@ const statuses: InvoiceStatus[] = ["Paid", "Paid", "Paid", "Pending", "Overdue",
 const users = ["Madhan R", "Priya S", "Vignesh K", "Divya M"];
 
 export const invoices: Invoice[] = Array.from({ length: 48 }, (_, i) => {
-  const c = customers[i % customers.length];
+  const c = customers[i % customers.length]!;
   const day = 26 - (i % 26);
   return {
     id: "INV-" + (3001 + i),
@@ -116,9 +116,9 @@ export const invoices: Invoice[] = Array.from({ length: 48 }, (_, i) => {
     customerId: c.id,
     date: `2026-08-${String(day).padStart(2, "0")}`,
     amount: Math.round((1850 + ((i * 3767) % 42000)) / 10) * 10,
-    payment: payments[(i * 3) % payments.length],
-    status: statuses[(i * 5) % statuses.length],
-    createdBy: users[i % users.length],
+    payment: payments[(i * 3) % payments.length]!,
+    status: statuses[(i * 5) % statuses.length]!,
+    createdBy: users[i % users.length]!,
   };
 });
 
