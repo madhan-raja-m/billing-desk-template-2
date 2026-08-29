@@ -11,9 +11,15 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EnquiriesRouteImport } from './routes/enquiries'
+import { Route as PrintRouteImport } from './routes/print'
 import { Route as ProductsRouteImport } from './routes/products'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as SetupRouteImport } from './routes/setup'
+import { Route as ThemesRouteImport } from './routes/themes'
 import { Route as CustomersIndexRouteImport } from './routes/customers.index'
 import { Route as CustomersIdRouteImport } from './routes/customers.$id'
+import { Route as InvoicesIndexRouteImport } from './routes/invoices.index'
 import { Route as InvoicesNewRouteImport } from './routes/invoices.new'
 
 const IndexRoute = IndexRouteImport.update({
@@ -26,9 +32,34 @@ const EnquiriesRoute = EnquiriesRouteImport.update({
   path: '/enquiries',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrintRoute = PrintRouteImport.update({
+  id: '/print',
+  path: '/print',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProductsRoute = ProductsRouteImport.update({
   id: '/products',
   path: '/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SetupRoute = SetupRouteImport.update({
+  id: '/setup',
+  path: '/setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ThemesRoute = ThemesRouteImport.update({
+  id: '/themes',
+  path: '/themes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CustomersIndexRoute = CustomersIndexRouteImport.update({
@@ -41,6 +72,11 @@ const CustomersIdRoute = CustomersIdRouteImport.update({
   path: '/customers/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InvoicesIndexRoute = InvoicesIndexRouteImport.update({
+  id: '/invoices/',
+  path: '/invoices/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InvoicesNewRoute = InvoicesNewRouteImport.update({
   id: '/invoices/new',
   path: '/invoices/new',
@@ -50,62 +86,104 @@ const InvoicesNewRoute = InvoicesNewRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/enquiries': typeof EnquiriesRoute
+  '/print': typeof PrintRoute
   '/products': typeof ProductsRoute
+  '/profile': typeof ProfileRoute
+  '/reports': typeof ReportsRoute
+  '/setup': typeof SetupRoute
+  '/themes': typeof ThemesRoute
   '/customers/$id': typeof CustomersIdRoute
   '/invoices/new': typeof InvoicesNewRoute
   '/customers/': typeof CustomersIndexRoute
+  '/invoices/': typeof InvoicesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/enquiries': typeof EnquiriesRoute
+  '/print': typeof PrintRoute
   '/products': typeof ProductsRoute
+  '/profile': typeof ProfileRoute
+  '/reports': typeof ReportsRoute
+  '/setup': typeof SetupRoute
+  '/themes': typeof ThemesRoute
   '/customers/$id': typeof CustomersIdRoute
   '/invoices/new': typeof InvoicesNewRoute
   '/customers': typeof CustomersIndexRoute
+  '/invoices': typeof InvoicesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/enquiries': typeof EnquiriesRoute
+  '/print': typeof PrintRoute
   '/products': typeof ProductsRoute
+  '/profile': typeof ProfileRoute
+  '/reports': typeof ReportsRoute
+  '/setup': typeof SetupRoute
+  '/themes': typeof ThemesRoute
   '/customers/$id': typeof CustomersIdRoute
   '/invoices/new': typeof InvoicesNewRoute
   '/customers/': typeof CustomersIndexRoute
+  '/invoices/': typeof InvoicesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/enquiries'
+    | '/print'
     | '/products'
+    | '/profile'
+    | '/reports'
+    | '/setup'
+    | '/themes'
     | '/customers/$id'
     | '/invoices/new'
     | '/customers/'
+    | '/invoices/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/enquiries'
+    | '/print'
     | '/products'
+    | '/profile'
+    | '/reports'
+    | '/setup'
+    | '/themes'
     | '/customers/$id'
     | '/invoices/new'
     | '/customers'
+    | '/invoices'
   id:
     | '__root__'
     | '/'
     | '/enquiries'
+    | '/print'
     | '/products'
+    | '/profile'
+    | '/reports'
+    | '/setup'
+    | '/themes'
     | '/customers/$id'
     | '/invoices/new'
     | '/customers/'
+    | '/invoices/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   EnquiriesRoute: typeof EnquiriesRoute
+  PrintRoute: typeof PrintRoute
   ProductsRoute: typeof ProductsRoute
+  ProfileRoute: typeof ProfileRoute
+  ReportsRoute: typeof ReportsRoute
+  SetupRoute: typeof SetupRoute
+  ThemesRoute: typeof ThemesRoute
   CustomersIdRoute: typeof CustomersIdRoute
   InvoicesNewRoute: typeof InvoicesNewRoute
   CustomersIndexRoute: typeof CustomersIndexRoute
+  InvoicesIndexRoute: typeof InvoicesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -124,11 +202,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnquiriesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/print': {
+      id: '/print'
+      path: '/print'
+      fullPath: '/print'
+      preLoaderRoute: typeof PrintRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/products': {
       id: '/products'
       path: '/products'
       fullPath: '/products'
       preLoaderRoute: typeof ProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/setup': {
+      id: '/setup'
+      path: '/setup'
+      fullPath: '/setup'
+      preLoaderRoute: typeof SetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/themes': {
+      id: '/themes'
+      path: '/themes'
+      fullPath: '/themes'
+      preLoaderRoute: typeof ThemesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/customers/': {
@@ -145,6 +258,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CustomersIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/invoices/': {
+      id: '/invoices/'
+      path: '/invoices'
+      fullPath: '/invoices/'
+      preLoaderRoute: typeof InvoicesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/invoices/new': {
       id: '/invoices/new'
       path: '/invoices/new'
@@ -158,10 +278,16 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   EnquiriesRoute: EnquiriesRoute,
+  PrintRoute: PrintRoute,
   ProductsRoute: ProductsRoute,
+  ProfileRoute: ProfileRoute,
+  ReportsRoute: ReportsRoute,
+  SetupRoute: SetupRoute,
+  ThemesRoute: ThemesRoute,
   CustomersIdRoute: CustomersIdRoute,
   InvoicesNewRoute: InvoicesNewRoute,
   CustomersIndexRoute: CustomersIndexRoute,
+  InvoicesIndexRoute: InvoicesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
