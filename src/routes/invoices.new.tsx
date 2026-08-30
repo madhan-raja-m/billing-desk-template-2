@@ -213,13 +213,54 @@ function CreateInvoice() {
   const [touched, setTouched] = React.useState(false);
   const [confirm, setConfirm] = React.useState(false);
   const [saving, setSaving] = React.useState(false);
+  const [couponCode, setCouponCode] = React.useState("");
+  const [coupon, setCoupon] = React.useState<Coupon | null>(null);
+  const [couponError, setCouponError] = React.useState<string | null>(null);
 
   const update = (id: string, patch: Partial<Line>) =>
     setLines((ls) => ls.map((l) => (l.id === id ? { ...l, ...patch } : l)));
 
   const subtotal = lines.reduce((s, l) => s + l.qty * l.price, 0);
+  const taxable = Math.max(0, subtotal - discount);
   const gstTotal = gstBilling ? lines.reduce((s, l) => s + (l.qty * l.price * l.gst) / 100, 0) : 0;
-  const grand = Math.round(Math.max(0, subtotal - discount + gstTotal));
+  const couponDiscount = coupon
+    ? coupon.type === "percent"
+      ? Math.round((taxable * coupon.value) / 100)
+      : Math.min(coupon.value, taxable)
+    : 0;
+  const grand = Math.round(Math.max(0, taxable - couponDiscount + gstTotal));
+
+  const applyCoupon = () => {
+    const code = couponCode.trim().toUpperCase();
+    if (!code) return;
+    const found = coupons.find((c) => c.code === code);
+    if (!found || !found.active) {
+      setCoupon(null);
+      setCouponError("Invalid or expired coupon");
+      return;
+    }
+    if (taxable < found.minOrder) {
+      setCoupon(null);
+      setCouponError(`Minimum order ${currency(found.minOrder)} required`);
+      return;
+    }
+    setCoupon(found);
+    setCouponError(null);
+    toast({
+      title: "Coupon applied",
+      tone: "success",
+      message:
+        found.type === "percent"
+          ? `${found.value}% off on this invoice`
+          : `${currency(found.value)} off on this invoice`,
+    });
+  };
+
+  const removeCoupon = () => {
+    setCoupon(null);
+    setCouponCode("");
+    setCouponError(null);
+  };
 
   const nameError = touched && !customer ? "Select or add a customer" : undefined;
   const lineError = touched && lines.some((l) => !l.name) ? true : false;
