@@ -147,7 +147,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
           key={n.to}
           to={n.to}
           onClick={onNavigate}
-          activeOptions={{ exact: n.to === "/" }}
+          activeOptions={{ exact: n.to === "/" || n.to === "/invoices" }}
           className="group relative rounded-md px-2.5 py-1.5 text-[13px] font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground data-[status=active]:bg-primary-soft data-[status=active]:text-primary"
         >
           {n.label}
@@ -175,7 +175,7 @@ function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void })
               key={n.to}
               to={n.to}
               onClick={onClose}
-              activeOptions={{ exact: n.to === "/" }}
+              activeOptions={{ exact: n.to === "/" || n.to === "/invoices" }}
               className="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] font-semibold text-muted-foreground transition data-[status=active]:bg-primary-soft data-[status=active]:text-primary"
             >
               <n.icon className="size-4" />

@@ -211,7 +211,7 @@ function CreateInvoice() {
 
   const subtotal = lines.reduce((s, l) => s + l.qty * l.price, 0);
   const gstTotal = gstBilling ? lines.reduce((s, l) => s + (l.qty * l.price * l.gst) / 100, 0) : 0;
-  const grand = Math.max(0, subtotal - discount + gstTotal);
+  const grand = Math.round(Math.max(0, subtotal - discount + gstTotal));
 
   const nameError = touched && !customer ? "Select or add a customer" : undefined;
   const lineError = touched && lines.some((l) => !l.name) ? true : false;
@@ -444,7 +444,7 @@ function CreateInvoice() {
               </div>
               <Row
                 label={gstBilling ? "GST" : "GST (disabled)"}
-                value={currency(gstTotal)}
+                value={currency(Math.round(gstTotal))}
                 muted={!gstBilling}
               />
               <div className="mt-1 flex items-center justify-between rounded-md bg-primary px-3 py-2.5 text-primary-foreground shadow-md">
