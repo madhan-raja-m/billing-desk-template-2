@@ -491,6 +491,56 @@ function CreateInvoice() {
                   onChange={(e) => setDiscount(Number(e.target.value) || 0)}
                 />
               </div>
+              {/* coupon */}
+              {coupon ? (
+                <div className="flex items-center justify-between gap-2 rounded-md border border-success/30 bg-success/10 px-2.5 py-1.5">
+                  <span className="flex items-center gap-1.5 text-[12px] font-bold text-success">
+                    <TicketPercent className="size-3.5" />
+                    {coupon.code}
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="num text-[12px] font-bold text-success">
+                      −{currency(couponDiscount)}
+                    </span>
+                    <button
+                      onClick={removeCoupon}
+                      aria-label="Remove coupon"
+                      className="rounded p-0.5 text-muted-foreground hover:text-danger"
+                    >
+                      <X className="size-3.5" />
+                    </button>
+                  </span>
+                </div>
+              ) : (
+                <div>
+                  <div className="flex items-center gap-2">
+                    <div className="relative flex-1">
+                      <TicketPercent className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                        value={couponCode}
+                        onChange={(e) => {
+                          setCouponCode(e.target.value.toUpperCase());
+                          setCouponError(null);
+                        }}
+                        onKeyDown={(e) => e.key === "Enter" && applyCoupon()}
+                        placeholder="Coupon code"
+                        className="num h-8 pl-7 text-[12px] font-semibold uppercase"
+                        {...(couponError ? { invalid: true } : {})}
+                      />
+                    </div>
+                    <Button size="sm" variant="soft" onClick={applyCoupon}>
+                      Apply
+                    </Button>
+                  </div>
+                  {couponError ? (
+                    <p className="mt-1 text-[11px] font-medium text-danger">{couponError}</p>
+                  ) : (
+                    <p className="mt-1 text-[10px] text-muted-foreground">
+                      Try WELCOME10, FEST50 or VIP15
+                    </p>
+                  )}
+                </div>
+              )}
               <Row
                 label={gstBilling ? "GST" : "GST (disabled)"}
                 value={currency(Math.round(gstTotal))}
