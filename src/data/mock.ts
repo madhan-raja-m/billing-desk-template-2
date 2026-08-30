@@ -213,6 +213,21 @@ export const reportCategories = [
   { group: "Invoices", items: ["Cancelled Invoices", "User-wise Sales"] },
 ];
 
+export type Coupon = {
+  code: string;
+  type: "percent" | "flat";
+  value: number;
+  minOrder: number;
+  active: boolean;
+};
+
+export const coupons: Coupon[] = [
+  { code: "WELCOME10", type: "percent", value: 10, minOrder: 500, active: true },
+  { code: "FEST50", type: "flat", value: 50, minOrder: 250, active: true },
+  { code: "VIP15", type: "percent", value: 15, minOrder: 2000, active: true },
+  { code: "FLASH20", type: "flat", value: 20, minOrder: 0, active: false },
+];
+
 export const activityLog = [
   { user: "Madhan R", action: "Created invoice BD/26-27/1420", time: "Today, 10:42 AM" },
   { user: "Priya S", action: "Updated product LED Panel Light 18W", time: "Today, 09:58 AM" },

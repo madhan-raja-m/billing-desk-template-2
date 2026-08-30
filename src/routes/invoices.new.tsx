@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Check, Phone, Plus, Save, Search, Trash2, UserPlus, X } from "lucide-react";
+import { Check, Phone, Plus, Save, Search, TicketPercent, Trash2, UserPlus, X } from "lucide-react";
 import * as React from "react";
 import { PageHeader } from "@/components/AppShell";
 import {
@@ -13,7 +13,15 @@ import {
   Select,
   useToast,
 } from "@/components/kit";
-import { currency, customers, products, type Customer, type Product } from "@/data/mock";
+import {
+  coupons,
+  currency,
+  customers,
+  products,
+  type Coupon,
+  type Customer,
+  type Product,
+} from "@/data/mock";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/invoices/new")({
@@ -205,13 +213,54 @@ function CreateInvoice() {
   const [touched, setTouched] = React.useState(false);
   const [confirm, setConfirm] = React.useState(false);
   const [saving, setSaving] = React.useState(false);
+  const [couponCode, setCouponCode] = React.useState("");
+  const [coupon, setCoupon] = React.useState<Coupon | null>(null);
+  const [couponError, setCouponError] = React.useState<string | null>(null);
 
   const update = (id: string, patch: Partial<Line>) =>
     setLines((ls) => ls.map((l) => (l.id === id ? { ...l, ...patch } : l)));
 
   const subtotal = lines.reduce((s, l) => s + l.qty * l.price, 0);
+  const taxable = Math.max(0, subtotal - discount);
   const gstTotal = gstBilling ? lines.reduce((s, l) => s + (l.qty * l.price * l.gst) / 100, 0) : 0;
-  const grand = Math.round(Math.max(0, subtotal - discount + gstTotal));
+  const couponDiscount = coupon
+    ? coupon.type === "percent"
+      ? Math.round((taxable * coupon.value) / 100)
+      : Math.min(coupon.value, taxable)
+    : 0;
+  const grand = Math.round(Math.max(0, taxable - couponDiscount + gstTotal));
+
+  const applyCoupon = () => {
+    const code = couponCode.trim().toUpperCase();
+    if (!code) return;
+    const found = coupons.find((c) => c.code === code);
+    if (!found || !found.active) {
+      setCoupon(null);
+      setCouponError("Invalid or expired coupon");
+      return;
+    }
+    if (taxable < found.minOrder) {
+      setCoupon(null);
+      setCouponError(`Minimum order ${currency(found.minOrder)} required`);
+      return;
+    }
+    setCoupon(found);
+    setCouponError(null);
+    toast({
+      title: "Coupon applied",
+      tone: "success",
+      message:
+        found.type === "percent"
+          ? `${found.value}% off on this invoice`
+          : `${currency(found.value)} off on this invoice`,
+    });
+  };
+
+  const removeCoupon = () => {
+    setCoupon(null);
+    setCouponCode("");
+    setCouponError(null);
+  };
 
   const nameError = touched && !customer ? "Select or add a customer" : undefined;
   const lineError = touched && lines.some((l) => !l.name) ? true : false;
@@ -442,6 +491,56 @@ function CreateInvoice() {
                   onChange={(e) => setDiscount(Number(e.target.value) || 0)}
                 />
               </div>
+              {/* coupon */}
+              {coupon ? (
+                <div className="flex items-center justify-between gap-2 rounded-md border border-success/30 bg-success/10 px-2.5 py-1.5">
+                  <span className="flex items-center gap-1.5 text-[12px] font-bold text-success">
+                    <TicketPercent className="size-3.5" />
+                    {coupon.code}
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="num text-[12px] font-bold text-success">
+                      −{currency(couponDiscount)}
+                    </span>
+                    <button
+                      onClick={removeCoupon}
+                      aria-label="Remove coupon"
+                      className="rounded p-0.5 text-muted-foreground hover:text-danger"
+                    >
+                      <X className="size-3.5" />
+                    </button>
+                  </span>
+                </div>
+              ) : (
+                <div>
+                  <div className="flex items-center gap-2">
+                    <div className="relative flex-1">
+                      <TicketPercent className="pointer-events-none absolute left-2 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                        value={couponCode}
+                        onChange={(e) => {
+                          setCouponCode(e.target.value.toUpperCase());
+                          setCouponError(null);
+                        }}
+                        onKeyDown={(e) => e.key === "Enter" && applyCoupon()}
+                        placeholder="Coupon code"
+                        className="num h-8 pl-7 text-[12px] font-semibold uppercase"
+                        {...(couponError ? { invalid: true } : {})}
+                      />
+                    </div>
+                    <Button size="sm" variant="soft" onClick={applyCoupon}>
+                      Apply
+                    </Button>
+                  </div>
+                  {couponError ? (
+                    <p className="mt-1 text-[11px] font-medium text-danger">{couponError}</p>
+                  ) : (
+                    <p className="mt-1 text-[10px] text-muted-foreground">
+                      Try WELCOME10, FEST50 or VIP15
+                    </p>
+                  )}
+                </div>
+              )}
               <Row
                 label={gstBilling ? "GST" : "GST (disabled)"}
                 value={currency(Math.round(gstTotal))}
