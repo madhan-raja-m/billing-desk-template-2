@@ -75,20 +75,20 @@ function SetupPage() {
 
       <div className="grid gap-2.5 lg:grid-cols-[220px_minmax(0,1fr)]">
         <Card className="h-fit p-2 lg:sticky lg:top-16">
-          <div className="scrollbar-thin flex gap-1 overflow-x-auto lg:block">
+          <div className="flex flex-col gap-1">
             {SECTIONS.map((s) => (
               <button
                 key={s.id}
                 onClick={() => setActive(s.id)}
                 className={cn(
-                  "flex shrink-0 items-center gap-2 rounded-md px-2.5 py-2 text-[13px] font-medium transition lg:w-full",
+                  "flex w-full items-center gap-2 rounded-md px-2.5 py-2 text-[13px] font-medium transition",
                   active === s.id
                     ? "bg-primary-soft font-semibold text-primary"
                     : "text-muted-foreground hover:bg-secondary hover:text-foreground",
                 )}
               >
                 <s.icon className="size-4 shrink-0" />
-                <span className="whitespace-nowrap">{s.id}</span>
+                <span className="truncate">{s.id}</span>
               </button>
             ))}
           </div>
