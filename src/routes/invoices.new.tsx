@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Check, Phone, Plus, Save, Search, Trash2, UserPlus, X } from "lucide-react";
+import { Check, Phone, Plus, Save, Search, TicketPercent, Trash2, UserPlus, X } from "lucide-react";
 import * as React from "react";
 import { PageHeader } from "@/components/AppShell";
 import {
@@ -13,7 +13,15 @@ import {
   Select,
   useToast,
 } from "@/components/kit";
-import { currency, customers, products, type Customer, type Product } from "@/data/mock";
+import {
+  coupons,
+  currency,
+  customers,
+  products,
+  type Coupon,
+  type Customer,
+  type Product,
+} from "@/data/mock";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/invoices/new")({
